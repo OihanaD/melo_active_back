@@ -43,14 +43,14 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
         $lastday = $firstday + 6;
 
         $dql = 'SELECT 
-                    U.email, U.password, U.name AS user_name, U.image AS user_image, U.address,
+                    U.email,U.name, U.password, U.image AS user_name, U.image AS user_image, U.address,
                     C.activity, C.objectives, C.problems, C.repetition_per_month,
                     CCS.is_paid, CS.price, 
                     SUBSTRING(CS.date_session, 1, 4) AS year, 
                     SUBSTRING(CS.date_session, 6, 2) AS month, 
                     SUBSTRING(CS.date_session, 9, 2) AS day, 
                     SUBSTRING(CS.date_session, 12, 5) AS time,
-                    CS.recap_of_coaching, COACH.information, COACH.id AS coach_id
+                    CS.recap_of_coaching,CS.activity_session, COACH.information, COACH.id AS coach_id
                 FROM 
                     App\Entity\User U
                 INNER JOIN 

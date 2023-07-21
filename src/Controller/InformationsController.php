@@ -20,7 +20,10 @@ class InformationsController extends AbstractController
         $month = $request->attributes->get('month'); 
         $firstday = $request->attributes->get('firstday'); 
         $result = $this->ccsrepos->search($year, $month, $firstday);
-       
+        // if($responseData['user_image']){
+        //    $responseData = "ok";
+        // }
+        // dd('ok');
        return $result;
 
     }

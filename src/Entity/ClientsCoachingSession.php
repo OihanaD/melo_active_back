@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\InformationsController;
+use App\Controller\PaymentsController;
 
 #[ORM\Entity(repositoryClass: ClientsCoachingSessionRepository::class)]
 #[ApiResource(
@@ -21,6 +22,7 @@ use App\Controller\InformationsController;
         new Put(),
         new Delete(),
         new GetCollection(name: 'friendsAndGroups', uriTemplate: '/informations/{year}/{month}/{firstday}', controller: InformationsController::class, normalizationContext: ['groups' => ['friendsAndGroups']]),
+        new GetCollection(name: 'payments', uriTemplate: '/payments', controller: PaymentsController::class, normalizationContext: ['groups' => ['payments']]),
         new Post()
     ]
 )]

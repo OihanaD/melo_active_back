@@ -38,12 +38,13 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function search($year,$month, $firstday){
-       
+    public function search($year, $month, $firstday)
+    {
+
         $lastday = $firstday + 6;
 
         $dql = 'SELECT 
-                    U.email,U.name, U.password, U.image AS user_name, U.image AS user_image, U.address,
+                    U.email,U.name,U.id AS user_id, U.password, U.image AS user_image, U.address,
                     C.activity, C.objectives, C.problems, C.repetition_per_month,
                     CCS.is_paid, CS.price, 
                     SUBSTRING(CS.date_session, 1, 4) AS year, 
@@ -67,38 +68,53 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
                     AND day BETWEEN :firstday AND :lastday
                    ';
 
-            $query = $this->getEntityManager()->createQuery($dql);
-            $query->setParameter('year', $year);
-            $query->setParameter('month', $month);
-            $query->setParameter('lastday', $lastday);
-            $query->setParameter('firstday', $firstday);
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setParameter('year', $year);
+        $query->setParameter('month', $month);
+        $query->setParameter('lastday', $lastday);
+        $query->setParameter('firstday', $firstday);
 
-            return $query->getResult(); 
-           
+        return $query->getResult();
+    }
+    public function payments()
+    {
+    
+
+        $dql = 'SELECT U.name AS user_name, CS.id AS session_id, CS.date_session, CS.price, CCS.is_paid, CS.activity_session
+        FROM App\Entity\ClientsCoachingSession AS CCS
+        LEFT JOIN App\Entity\CoachingSession CS WITH CCS.coachingSessionId = CS.id
+        INNER JOIN App\Entity\Clients C WITH C.id = CCS.clientId
+        LEFT JOIN App\Entity\User U WITH U.userclient = C.id
+        WHERE CS.date_session <= CURRENT_DATE() AND U.userclient IS NOT NULL
+        ORDER BY CS.date_session DESC';
+
+        
+        $query = $this->getEntityManager()->createQuery($dql);
+        return $query->getResult();
     }
 
-//    /**
-//     * @return ClientsCoachingSession[] Returns an array of ClientsCoachingSession objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return ClientsCoachingSession[] Returns an array of ClientsCoachingSession objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('c.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?ClientsCoachingSession
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?ClientsCoachingSession
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

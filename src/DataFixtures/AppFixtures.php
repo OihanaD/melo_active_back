@@ -8,23 +8,29 @@ use App\Entity\Coach;
 use App\Entity\CoachingSession;
 use App\Entity\User;
 use App\Repository\CoachRepository;
+use App\Service\Connexion;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class AppFixtures extends Fixture
 {
+ 
+
     public function load(ObjectManager $manager): void
 
     {
         $coach = new Coach;
         $coach->setInformation("Information du coach");
-
+       
         for ($i = 0; $i < 10; $i++) {
             $user = new User();
             $user->setName("User " . $i);
             $user->setEmail("user" . $i . "@example.com");
-            $user->setImage("user_" . $i . ".jpg");
+            $user->setImage( 'http://127.0.0.1:8000/'."image/user_" . $i . ".jpg");
             $user->setAddress(rand(1, 100) . " Main St, Anytown France");
             $user->setPassword("password_" . $i);
             if ($i == 1) {

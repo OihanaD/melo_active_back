@@ -5,21 +5,20 @@ namespace App\Controller;
 use App\Repository\ClientsCoachingSessionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class InformationsController extends AbstractController
+class PaymentsController extends AbstractController
 {
     protected $ccsrepos;
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/informations/{year}/{month}/{firstday}', name: 'app_informations')]
+    #[Route('/payments', name: 'app_payments')]
     public function __invoke(Request $request)
     {
-        $year = $request->attributes->get('year'); 
-        $month = $request->attributes->get('month'); 
-        $firstday = $request->attributes->get('firstday'); 
-        $result = $this->ccsrepos->search($year, $month, $firstday);
+         
+        $result = $this->ccsrepos->payments();
 
        return $result;
 

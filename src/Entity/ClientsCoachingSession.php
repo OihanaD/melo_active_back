@@ -14,6 +14,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\InformationsController;
 use App\Controller\PaymentsController;
+use App\Controller\TotalPaymentsController;
+use App\Controller\TotalPaymentsWaitingController;
 
 #[ORM\Entity(repositoryClass: ClientsCoachingSessionRepository::class)]
 #[ApiResource(
@@ -23,6 +25,8 @@ use App\Controller\PaymentsController;
         new Delete(),
         new GetCollection(name: 'friendsAndGroups', uriTemplate: '/informations/{year}/{month}/{firstday}', controller: InformationsController::class, normalizationContext: ['groups' => ['friendsAndGroups']]),
         new GetCollection(name: 'payments', uriTemplate: '/payments', controller: PaymentsController::class, normalizationContext: ['groups' => ['payments']]),
+        new GetCollection(name: 'paymentsTotalPerMonthPayed', uriTemplate: '/payments/total/{month}/{year}', controller: TotalPaymentsController::class, normalizationContext: ['groups' => ['totalPaymentsPayed']]),
+        new GetCollection(name: 'paymentsTotalwaiting', uriTemplate: '/payments/total/wait', controller: TotalPaymentsWaitingController::class, normalizationContext: ['groups' => ['totalPaymentsWait']]),
         new Post()
     ]
 )]

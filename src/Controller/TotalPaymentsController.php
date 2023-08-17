@@ -8,17 +8,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PaymentsController extends AbstractController
+class TotalPaymentsController extends AbstractController
 {
     protected $ccsrepos;
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/payments', name: 'app_payments')]
-    public function __invoke()
+    #[Route('/payments/total/{month}/{year}', name: 'app_total_payments')]
+    public function __invoke(Request $request)
     {
-         
-        $result = $this->ccsrepos->payments();
+        $year = $request->attributes->get('year'); 
+        $month = $request->attributes->get('month'); 
+        $result = $this->ccsrepos->paymentsPerMonthPayed($month, $year);
 
        return $result;
 

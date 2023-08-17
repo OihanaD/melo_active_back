@@ -78,7 +78,7 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
     }
     public function payments()
     {
-    
+
 
         $dql = 'SELECT U.name AS user_name, CS.id AS session_id, CS.date_session, CS.price, CCS.is_paid, CS.activity_session
         FROM App\Entity\ClientsCoachingSession AS CCS
@@ -88,8 +88,48 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
         WHERE CS.date_session <= CURRENT_DATE() AND U.userclient IS NOT NULL
         ORDER BY CS.date_session DESC';
 
-        
+
         $query = $this->getEntityManager()->createQuery($dql);
+        return $query->getResult();
+    }
+    public function paymentsPerMonthPayed($month, $year)
+    {
+
+
+        $dql = 'SELECT 
+        SUM(CS.price) AS total_paid_amount
+    FROM 
+        App\Entity\ClientsCoachingSession CCS
+    INNER JOIN 
+        App\Entity\CoachingSession CS WITH CCS.coachingSessionId = CS.id
+    WHERE 
+        CCS.is_paid = true
+        AND SUBSTRING(CS.date_session, 1, 4) = :year
+        AND SUBSTRING(CS.date_session, 6, 2) = :month
+        AND CS.date_session<= CURRENT_DATE()';
+
+        $query = $this->getEntityManager()->createQuery($dql);
+        $query->setParameter('month', $month);
+        $query->setParameter('year', $year);
+
+        return $query->getResult();
+    }
+    public function paymentsWaiting()
+    {
+
+
+        $dql = 'SELECT 
+            SUM(CS.price) AS total_wait_amount
+        FROM 
+            App\Entity\ClientsCoachingSession CCS
+        INNER JOIN 
+            App\Entity\CoachingSession CS WITH CCS.coachingSessionId = CS.id
+        WHERE 
+            CCS.is_paid = false
+            AND CS.date_session<= CURRENT_DATE()';
+
+        $query = $this->getEntityManager()->createQuery($dql);
+
         return $query->getResult();
     }
 

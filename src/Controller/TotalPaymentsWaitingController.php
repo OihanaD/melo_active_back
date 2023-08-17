@@ -8,17 +8,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PaymentsController extends AbstractController
+class TotalPaymentsWaitingController extends AbstractController
 {
     protected $ccsrepos;
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/payments', name: 'app_payments')]
+    #[Route('/payments/total/wait', name: 'app_total_payments_waiting')]
     public function __invoke()
     {
-         
-        $result = $this->ccsrepos->payments();
+
+        $result = $this->ccsrepos->paymentsWaiting();
 
        return $result;
 

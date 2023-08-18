@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Controller\ClientDataController;
 use App\Controller\InformationsController;
 use App\Controller\PaymentsController;
 use App\Controller\TotalPaymentsController;
@@ -27,6 +28,8 @@ use App\Controller\TotalPaymentsWaitingController;
         new GetCollection(name: 'payments', uriTemplate: '/payments', controller: PaymentsController::class, normalizationContext: ['groups' => ['payments']]),
         new GetCollection(name: 'paymentsTotalPerMonthPayed', uriTemplate: '/payments/total/{month}/{year}', controller: TotalPaymentsController::class, normalizationContext: ['groups' => ['totalPaymentsPayed']]),
         new GetCollection(name: 'paymentsTotalwaiting', uriTemplate: '/payments/total/wait', controller: TotalPaymentsWaitingController::class, normalizationContext: ['groups' => ['totalPaymentsWait']]),
+        new GetCollection(name: 'clientData', uriTemplate: '/client/details/{id}', controller: ClientDataController::class, normalizationContext: ['groups' => ['clientData']]),
+        new GetCollection(),
         new Post()
     ]
 )]

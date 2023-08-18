@@ -78,8 +78,6 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
     }
     public function payments()
     {
-
-
         $dql = 'SELECT U.name AS user_name, CS.id AS session_id, CS.date_session, CS.price, CCS.is_paid, CS.activity_session
         FROM App\Entity\ClientsCoachingSession AS CCS
         LEFT JOIN App\Entity\CoachingSession CS WITH CCS.coachingSessionId = CS.id
@@ -132,6 +130,49 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
+    public function getClientDataById($clientId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $sql_query = "SELECT 
+        U.email, U.name AS user_name, U.image AS user_image, U.address,
+        C.activity, C.objectives, C.problems, C.repetition_per_month,
+        COALESCE(GROUP_CONCAT(
+            CONCAT(
+                'Session: ', CS.id,
+                ', Price: ', CS.price,
+                ', Date: ', CS.date_session,
+                ', Activity: ', CS.activity_session
+            )
+            ORDER BY CS.date_session DESC SEPARATOR '||'
+        ), '') AS session_list,
+        SUM(CASE WHEN CCS.is_paid = true THEN CS.price ELSE 0 END) AS total_paid,
+        SUM(CASE WHEN CCS.is_paid = false THEN CS.price ELSE 0 END) AS total_unpaid
+    FROM 
+        App\Entity\ClientsCoachingSession CCS
+    INNER JOIN 
+        App\Entity\CoachingSession CS WITH CCS.coachingSessionId = CS.id
+    INNER JOIN 
+        App\Entity\Clients C WITH C.id = CCS.clientId
+    INNER JOIN 
+        App\Entity\User U WITH U.userclient = C.id
+    WHERE 
+        C.id = :clientId
+    GROUP BY 
+        U.email, U.name, U.image, U.address,
+        C.activity, C.objectives, C.problems, C.repetition_per_month";
+
+        $userClientQuery = $entityManager->createQuery($sql_query)->setParameter('clientId', $clientId);
+
+        $res = $userClientQuery->getResult();
+        foreach ($res as &$row) {
+            $row['session_list'] = explode('||', $row['session_list']);
+        }
+        
+        return $res;
+        
+    }
+
 
     //    /**
     //     * @return ClientsCoachingSession[] Returns an array of ClientsCoachingSession objects

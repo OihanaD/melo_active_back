@@ -14,7 +14,6 @@ class TotalPaymentsController extends AbstractController
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/payments/total/{month}/{year}', name: 'app_total_payments')]
     public function __invoke(Request $request)
     {
         $year = $request->attributes->get('year'); 

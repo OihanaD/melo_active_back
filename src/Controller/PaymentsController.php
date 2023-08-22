@@ -14,7 +14,6 @@ class PaymentsController extends AbstractController
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/payments', name: 'app_payments')]
     public function __invoke()
     {
          

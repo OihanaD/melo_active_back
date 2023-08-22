@@ -15,7 +15,6 @@ class ClientDataController extends AbstractController
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/client/{id}', name: 'app_client_data')]
     public function __invoke(Request $request)
     {
         $id = $request->attributes->get('id'); 
@@ -25,4 +24,5 @@ class ClientDataController extends AbstractController
        return $result;
 
     }
+       
 }

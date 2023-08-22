@@ -114,8 +114,6 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
     }
     public function paymentsWaiting()
     {
-
-
         $dql = 'SELECT 
             SUM(CS.price) AS total_wait_amount
         FROM 
@@ -130,11 +128,12 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
 
         return $query->getResult();
     }
+
     public function getClientDataById($clientId)
     {
         $entityManager = $this->getEntityManager();
 
-        $sql_query = "SELECT 
+        $dql = "SELECT 
         U.email, U.name AS user_name, U.image AS user_image, U.address,U.phone,
         C.activity, C.objectives, C.problems, C.repetition_per_month,
         GROUP_CONCAT(
@@ -143,6 +142,8 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
                 ', Price: ', CS.price,
                 ', Date: ', CS.date_session,
                 ', Activity: ', CS.activity_session,
+                ', Recap: ', COALESCE(CS.recap_of_coaching, ''),
+                ', Objectif: ', COALESCE(CS.objectif_of_coaching, ''),
                 ', Ispaid: ', CCS.is_paid
             )
             ORDER BY CS.date_session DESC SEPARATOR '||'
@@ -163,39 +164,48 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
         U.email, U.name, U.image, U.address,
         C.activity, C.objectives, C.problems, C.repetition_per_month";
 
-        $userClientQuery = $entityManager->createQuery($sql_query)->setParameter('clientId', $clientId);
+        $userClientQuery = $entityManager->createQuery($dql)->setParameter('clientId', $clientId);
 
         $res = $userClientQuery->getResult();
+        //Pour chaque valeur modifié directement avec le &
         foreach ($res as &$row) {
+            //Coupez le session list à l'endroit des ||
             $row['session_list'] = explode('||', $row['session_list']);
+            //Initialisation du tableau
             $sessions = [];
+            foreach ($row['session_list'] as $index => $sessionString) {
+                // Divisez chaque session en un tableau en utilisant ', ' comme délimiteur
+                $sessionParts = explode(', ', $sessionString);
 
-    foreach ($row['session_list'] as $index => $sessionString) {
-        // Divisez chaque session en un tableau en utilisant ', ' comme délimiteur
-        $sessionParts = explode(', ', $sessionString);
+                // Initialisez un tableau pour stocker les paires clé-valeur
+                $sessionArray = [];
 
-        // Initialisez un tableau pour stocker les paires clé-valeur
-        $sessionArray = [];
+                foreach ($sessionParts as $part) {
+                    // Divisez chaque élément en clé et en valeur en utilisant ": " comme séparateur
+                    list($key, $value) = explode(': ', $part, 2);
 
-        foreach ($sessionParts as $part) {
-            // Divisez chaque élément en clé et en valeur en utilisant ": " comme séparateur
-            list($key, $value) = explode(': ', $part, 2);
+                    // Ajoutez la paire clé-valeur au tableau de la session
+                    $sessionArray[$key] = $value;
+                }
 
-            // Ajoutez la paire clé-valeur au tableau de la session
-            $sessionArray[$key] = $value;
-        }
+                // Ajoutez la session au tableau de sessions avec un index
+                $sessions[$index] = $sessionArray;
+            }
 
-        // Ajoutez la session au tableau de sessions avec un index
-        $sessions[$index] = $sessionArray;
-    }
-
-    // Mettez à jour la valeur de 'session_list' dans $row avec le tableau de sessions
+            // Mettez à jour la valeur de 'session_list' dans $row avec le tableau de sessions
             $row['session_list'] = $sessions;
             $row['activity'] = explode('|', $row['activity']);
         }
 
         return $res;
     }
+    public function test(){
+        $dql = "SELECT U FROM App\Entity\User U";
+        $query = $this->getEntityManager()->createQuery($dql);
+        dd($query->getResult());
+
+        return $query->getResult();   
+     }
 
 
     //    /**

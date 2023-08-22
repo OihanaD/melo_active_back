@@ -13,7 +13,6 @@ class InformationsController extends AbstractController
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/informations/{year}/{month}/{firstday}', name: 'app_informations')]
     public function __invoke(Request $request)
     {
         $year = $request->attributes->get('year'); 

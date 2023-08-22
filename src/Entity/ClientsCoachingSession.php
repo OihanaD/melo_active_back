@@ -4,13 +4,12 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ClientsCoachingSessionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\ClientDataController;
 use App\Controller\InformationsController;
@@ -24,13 +23,14 @@ use App\Controller\TotalPaymentsWaitingController;
         new Get(),
         new Put(),
         new Delete(),
-        new GetCollection(name: 'friendsAndGroups', uriTemplate: '/informations/{year}/{month}/{firstday}', controller: InformationsController::class, normalizationContext: ['groups' => ['friendsAndGroups']]),
-        new GetCollection(name: 'payments', uriTemplate: '/payments', controller: PaymentsController::class, normalizationContext: ['groups' => ['payments']]),
-        new GetCollection(name: 'paymentsTotalPerMonthPayed', uriTemplate: '/payments/total/{month}/{year}', controller: TotalPaymentsController::class, normalizationContext: ['groups' => ['totalPaymentsPayed']]),
-        new GetCollection(name: 'paymentsTotalwaiting', uriTemplate: '/payments/total/wait', controller: TotalPaymentsWaitingController::class, normalizationContext: ['groups' => ['totalPaymentsWait']]),
-        new GetCollection(name: 'clientData', uriTemplate: '/client/details/{id}', controller: ClientDataController::class, normalizationContext: ['groups' => ['clientData']]),
+        new GetCollection(name: 'friendsAndGroups', uriTemplate: '/informations/{year}/{month}/{firstday}', controller: InformationsController::class),
+        new GetCollection(name: 'payments', uriTemplate: '/payments', controller: PaymentsController::class),
+        new GetCollection(name: 'paymentsTotalPerMonthPayed', uriTemplate: '/payments/total/{month}/{year}', controller: TotalPaymentsController::class),
+        new GetCollection(name: 'paymentsTotalwaiting', uriTemplate: '/payments/total/wait', controller: TotalPaymentsWaitingController::class),
+        new GetCollection(name: 'clientData', uriTemplate: '/client/details/{id}', controller: ClientDataController::class),
         new GetCollection(),
-        new Post()
+        new Post(), 
+        new Patch()
     ]
 )]
 class ClientsCoachingSession

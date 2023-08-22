@@ -38,29 +38,57 @@ class ClientsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function getClientInfoForList()
+    {
+        $entityManager = $this->getEntityManager();
+        $dql= "SELECT 
+        U.email, 
+        U.name AS user_name, 
+        U.image AS user_image, 
+        U.phone,
+        C.activity,
+        MAX(CASE WHEN CS.date_session <= CURRENT_DATE() THEN CS.date_session ELSE '' END) AS last_session_date
+    FROM 
+        App\Entity\ClientsCoachingSession CCS
+    INNER JOIN 
+        App\Entity\CoachingSession CS WITH CCS.coachingSessionId = CS.id
+    INNER JOIN 
+        App\Entity\Clients C WITH C.id = CCS.clientId
+    INNER JOIN 
+        App\Entity\User U WITH U.userclient = C.id
+    GROUP BY 
+        U.email, U.name, U.image, U.phone, C.activity";
 
-//    /**
-//     * @return Clients[] Returns an array of Clients objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+        $query = $entityManager->createQuery($dql);
+        $res = $query->getResult();
+        foreach ($res as &$row) {
+            $row['activity'] = explode('|', $row['activity']);
+        }
+        return $res;
+    }
 
-//    public function findOneBySomeField($value): ?Clients
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Clients[] Returns an array of Clients objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('c.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Clients
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

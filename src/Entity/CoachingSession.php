@@ -36,6 +36,9 @@ class CoachingSession
     #[ORM\OneToMany(mappedBy: 'coachingSessionId', targetEntity: ClientsCoachingSession::class)]
     private Collection $clientsCoachingSessions;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $objectif_of_coaching = null;
+
     public function __construct()
     {
         $this->clientsCoachingSessions = new ArrayCollection();
@@ -134,6 +137,18 @@ class CoachingSession
                 $clientsCoachingSession->setCoachingSessionId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getObjectifOfCoaching(): ?string
+    {
+        return $this->objectif_of_coaching;
+    }
+
+    public function setObjectifOfCoaching(?string $objectif_of_coaching): self
+    {
+        $this->objectif_of_coaching = $objectif_of_coaching;
 
         return $this;
     }

@@ -14,10 +14,8 @@ class TotalPaymentsWaitingController extends AbstractController
     public function __construct(ClientsCoachingSessionRepository $ccsrepos) {
         $this->ccsrepos = $ccsrepos;
     }
-    #[Route('/payments/total/wait', name: 'app_total_payments_waiting')]
     public function __invoke()
     {
-
         $result = $this->ccsrepos->paymentsWaiting();
 
        return $result;

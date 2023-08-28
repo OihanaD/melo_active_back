@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use ApiPlatform\Api\QueryParameterValidator\Validator\Length;
 use App\Entity\ClientsCoachingSession;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -92,7 +93,7 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
     }
     public function paymentsPerMonthPayed($month, $year)
     {
-
+       
 
         $dql = 'SELECT 
         SUM(CS.price) AS total_paid_amount
@@ -199,13 +200,7 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
 
         return $res;
     }
-    public function test(){
-        $dql = "SELECT U FROM App\Entity\User U";
-        $query = $this->getEntityManager()->createQuery($dql);
-        dd($query->getResult());
-
-        return $query->getResult();   
-     }
+   
 
 
     //    /**

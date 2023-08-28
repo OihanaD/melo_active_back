@@ -19,17 +19,36 @@ use App\Controller\CreateClientController;
 
 #[ORM\Entity(repositoryClass: ClientsRepository::class)]
 #[ApiResource(
-    operations:[
+    operations: [
         new Get(),
         new Put(),
         new Delete(),
         new GetCollection(name: 'clientsInfos', uriTemplate: 'client/infos', controller: ClientInfosForListController::class),
         new GetCollection(),
         new Post(),
-        new Post(name:'createClient', uriTemplate:'client/add', controller:CreateClientController::class),
+        new Post(name: 'createClient', uriTemplate: 'client/add', controller: CreateClientController::class)
+        // , openapiContext: [
+        //     'requestBody' => [
+        //         'content' => [
+        //             'multipart/form-data' => [
+        //                 'schema' => [
+        //                     'type' => 'object',
+        //                     'properties' => [
+        //                         'file' => [
+        //                             'type' => 'string',
+        //                             'format' => 'binary'
+        //                         ]
+        //                     ]
+        //                 ]
+        //             ]
+        //         ]
+        //     ]
+        // ]),
+        ,
         new Patch()
     ]
 )]
+
 class Clients
 {
     #[ORM\Id]
@@ -137,7 +156,7 @@ class Clients
         return $this;
     }
 
-    
+
 
     /**
      * @return Collection<int, ClientsCoachingSession>

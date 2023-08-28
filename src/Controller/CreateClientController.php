@@ -30,6 +30,7 @@ class CreateClientController extends AbstractController
         $user->setAddress($address);
         $user->setPhone($phone);
         $user->setPassword('MeloActiv');
+        
         $client = new Clients();
 
         $client->setActivity($activity);

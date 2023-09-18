@@ -8,47 +8,52 @@ use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 
 class CreateClientController extends AbstractController
 {
-    public function __invoke(Request $request,ManagerRegistry $doctrine)
-    {   
-        $response = json_decode($request->getContent(), true);
-        $nom = $response['user']['name'];
-        $mail = $response['user']['email'];
-        $address = $response['user']['address'];
-        $phone = $response['user']['phone'];
-        $activity = $response['activity'];
-        $objectives = $response['objectives'];
-        $problems = $response['problems'];
-        $repetitionPerMonth = $response['repetitionPerMonth'];
-        $user = new User();
-        $user->setName($nom);
-        $user->setEmail($mail);
-        $user->setAddress($address);
-        $user->setPhone($phone);
-        $user->setPassword('MeloActiv');
-        
-        $client = new Clients();
+    public function __invoke(Request $request, ManagerRegistry $doctrine)
+    {
+        try {
+            $response = json_decode($request->getContent(), true);
+            $nom = $response['user']['name'];
+            $mail = $response['user']['email'];
+            $address = $response['user']['address'];
+            $phone = $response['user']['phone'];
+            if ($response['activity'] == "string" || empty($response['activity'])) {
+                $activity = NULL;
+            } else {
+                $activity = $response['activity'];
+            }
+            $objectives = $response['objectives'];
+            $problems = $response['problems'];
+            $repetitionPerMonth = $response['repetitionPerMonth'];
+            $user = new User();
+            $user->setName($nom);
+            $user->setEmail($mail);
+            $user->setAddress($address);
+            $user->setPhone($phone);
+            $user->setPassword('MeloActiv');
 
-        $client->setActivity($activity);
-        $objectives? $client->setObjectives($objectives):$client->setObjectives(NULL);
-        $problems? $client->setProblems($problems): $client->setProblems(NULL);
-        $client->setRepetitionPerMonth($repetitionPerMonth);
-        $user->setUserclient($client);
+            $client = new Clients();
 
-        $manager = $doctrine->getManager(); 
-        $manager->persist($user);
-        $manager->persist($client);
-        $manager->flush();
+            $client->setActivity($activity);
+            $objectives ? $client->setObjectives($objectives) : $client->setObjectives(NULL);
+            $problems ? $client->setProblems($problems) : $client->setProblems(NULL);
+            $client->setRepetitionPerMonth($repetitionPerMonth);
+            $user->setUserclient($client);
 
-        // Répondez avec une réponse de succès
-        return new Response('Client créé avec succès', Response::HTTP_CREATED);
+            $manager = $doctrine->getManager();
+            $manager->persist($user);
+            $manager->persist($client);
+            $manager->flush();
 
-
-
-        
+            // Répondez avec une réponse de succès
+            return new Response('Client créé avec succès', Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Client déjà ajouté'], 200);
+        }
     }
 }

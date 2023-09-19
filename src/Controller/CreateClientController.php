@@ -12,9 +12,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 
+
 class CreateClientController extends AbstractController
 {
-    public function __invoke(Request $request, ManagerRegistry $doctrine)
+    public function createCoachingSession(Request $request, ManagerRegistry $doctrine)
     {
         try {
             $response = json_decode($request->getContent(), true);

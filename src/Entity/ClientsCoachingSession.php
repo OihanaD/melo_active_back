@@ -12,10 +12,12 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\ClientDataController;
+use App\Controller\CreateSeanceController;
 use App\Controller\InformationsController;
 use App\Controller\PaymentsController;
 use App\Controller\TotalPaymentsController;
 use App\Controller\TotalPaymentsWaitingController;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ClientsCoachingSessionRepository::class)]
 #[ApiResource(
@@ -44,6 +46,7 @@ class ClientsCoachingSession
     private ?bool $is_paid = null;
 
     #[ORM\ManyToOne(inversedBy: 'clientsCoachingSessions')]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private ?Clients $clientId = null;
 
     #[ORM\ManyToOne(inversedBy: 'clientsCoachingSessions')]

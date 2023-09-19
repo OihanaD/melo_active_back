@@ -42,6 +42,7 @@ class ClientsRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $dql= "SELECT 
+        C.id,
         U.email, 
         U.name AS user_name, 
         U.image AS user_image, 

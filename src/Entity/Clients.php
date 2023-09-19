@@ -16,6 +16,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Controller\ClientInfosForListController;
 use App\Controller\CreateClientController;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: ClientsRepository::class)]
 #[ApiResource(

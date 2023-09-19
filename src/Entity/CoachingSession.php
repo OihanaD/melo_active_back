@@ -7,10 +7,31 @@ use App\Repository\CoachingSessionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\CreateSeanceController;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+
 
 #[ORM\Entity(repositoryClass: CoachingSessionRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['coachingSession:read']],
+    denormalizationContext: ['groups' => ['coachingSession:write']],
+    operations:[
+        new Get(),
+        new Put(),
+        new Delete(),
+        new Patch(),
+        new Post(),
+        // new Post(name:'createSeance', uriTemplate: 'coaching-session/add', normalizationContext: ['groups' => 'coachingSession:add:read'], denormalizationContext: ['groups' => 'coachingSession:add:write'])
+    ]
+)]
 class CoachingSession
 {
     #[ORM\Id]
@@ -19,24 +40,31 @@ class CoachingSession
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private ?\DateTimeInterface $date_session = null;
 
     #[ORM\Column]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private ?float $price = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private ?string $activity_session = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private ?string $recap_of_coaching = null;
 
     #[ORM\ManyToOne(inversedBy: 'coaching_session')]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private ?Coach $coach = null;
 
-    #[ORM\OneToMany(mappedBy: 'coachingSessionId', targetEntity: ClientsCoachingSession::class)]
+    #[ORM\OneToMany(mappedBy: 'coachingSessionId', targetEntity: ClientsCoachingSession::class, cascade: ['persist'])]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private Collection $clientsCoachingSessions;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['coachingSession:add:read', 'coachingSession:add:write'])]
     private ?string $objectif_of_coaching = null;
 
     public function __construct()

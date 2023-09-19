@@ -6,3 +6,4 @@ api_platform:
     swagger:
         versions: [3]
     metadata_backward_compatibility_layer: false
+    

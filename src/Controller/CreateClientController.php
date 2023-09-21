@@ -10,12 +10,11 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-
-
+use Symfony\Component\Serializer\SerializerInterface;
 
 class CreateClientController extends AbstractController
 {
-    public function createCoachingSession(Request $request, ManagerRegistry $doctrine)
+    public function __invoke(Request $request, ManagerRegistry $doctrine, SerializerInterface $serializer)
     {
         try {
             $response = json_decode($request->getContent(), true);

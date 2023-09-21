@@ -70,10 +70,8 @@ class Clients
     #[ORM\OneToOne(mappedBy: 'userclient', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
-
     #[ORM\Column]
     private ?int $repetition_per_month = null;
-
 
     #[ORM\OneToMany(mappedBy: 'clientId', targetEntity: ClientsCoachingSession::class)]
     private Collection $clientsCoachingSessions;

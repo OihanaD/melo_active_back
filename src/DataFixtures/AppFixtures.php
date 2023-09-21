@@ -14,11 +14,31 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 
 class AppFixtures extends Fixture
 {
- 
+    public const ADMIN_USER_REFERENCE = self::REFERENCE . 'admin';
+    public const MAIL_HOST = '@exemple.fr';
+    public const REFERENCE = 'user_';
+    public const SUPER_ADMIN_USER_REFERENCE = self::REFERENCE . 'super_admin';
+    public const TOTAL_FIXTURES = 5;
+    public const USER_PASSWORD = 'user_password';
+
+    public const ADMIN_FIXTURES = [
+        [
+            'reference' => self::ADMIN_USER_REFERENCE,
+        ],
+        [
+            'reference' => self::SUPER_ADMIN_USER_REFERENCE,
+        ],
+    ];
+
+    public function __construct(private UserPasswordHasherInterface $hasher)
+    {
+    }
 
     public function load(ObjectManager $manager): void
 
@@ -27,12 +47,15 @@ class AppFixtures extends Fixture
         $coach->setInformation("Information du coach");
        
         for ($i = 0; $i < 10; $i++) {
+            $reference = self::REFERENCE . $i;
             $user = new User();
-            $user->setName("User " . $i);
-            $user->setEmail("user" . $i . "@example.com");
-            $user->setImage( 'http://127.0.0.1:8000/'."image/user_" . $i . ".jpg");
-            $user->setAddress(rand(1, 100) . " Main St, Anytown France");
-            $user->setPassword("password_" . $i);
+
+            $user->setEmail($reference . static::MAIL_HOST)
+                ->setPassword($this->hasher->hashPassword($user, self::USER_PASSWORD))
+                ->setName($reference)
+                ->setAddress(rand(1, 100) . " Main St, Anytown France");
+                
+
             if ($i == 1) {
                 $coach->setUser($user);
             }
@@ -77,10 +100,23 @@ class AppFixtures extends Fixture
             $manager->persist($coach);
 
             $manager->persist($user);
+            $this->addReference($reference, $user);
             $manager->persist($session);
             $manager->persist($client);
             $manager->persist($sessionClient);
         }
+
+        foreach (self::ADMIN_FIXTURES as $fixture) {
+            $user = new User();
+
+            $user->setEmail($fixture['reference'] . self::MAIL_HOST)
+                ->setPassword($this->hasher->hashPassword($user, self::USER_PASSWORD))
+                ->setName($fixture['reference']);
+
+            $manager->persist($user);
+            $this->addReference($fixture['reference'], $user);
+        }
+
         $manager->flush();
     }
 }

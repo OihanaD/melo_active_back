@@ -40,7 +40,7 @@ class CreateSeanceController extends AbstractController
             $seance->setDateSession($seanceDateTime);
             $seance->setActivitySession($seanceActivity);
             $seance->setObjectifOfCoaching($seanceObjectif);
-            $coach = $coachRepository->findOneBy(['id' => 5]);
+            $coach = $coachRepository->findOneBy(['id' => 1]);
             $seance->setCoach($coach);
             $manager = $doctrine->getManager();
 

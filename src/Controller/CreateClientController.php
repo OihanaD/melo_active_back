@@ -14,9 +14,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class CreateClientController extends AbstractController
 {
-    public function __invoke(Request $request, ManagerRegistry $doctrine, SerializerInterface $serializer)
+    public function __invoke(Request $request, ManagerRegistry $doctrine)
     {
-        try {
             $response = json_decode($request->getContent(), true);
             $nom = $response['user']['name'];
             $mail = $response['user']['email'];
@@ -52,8 +51,6 @@ class CreateClientController extends AbstractController
 
             // Répondez avec une réponse de succès
             return new Response('Client créé avec succès', Response::HTTP_CREATED);
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Client déjà ajouté'], 200);
-        }
+        
     }
 }

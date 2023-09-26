@@ -67,6 +67,8 @@ class ClientsCoachingSessionRepository extends ServiceEntityRepository
                    year = :year 
                     AND month = :month 
                     AND day BETWEEN :firstday AND :lastday
+                ORDER BY
+                    time
                    ';
 
         $query = $this->getEntityManager()->createQuery($dql);

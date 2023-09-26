@@ -7,13 +7,9 @@ use App\Entity\ClientsCoachingSession;
 use App\Entity\Coach;
 use App\Entity\CoachingSession;
 use App\Entity\User;
-use App\Repository\CoachRepository;
-use App\Service\Connexion;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 

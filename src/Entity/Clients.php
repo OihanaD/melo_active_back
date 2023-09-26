@@ -28,25 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(name: 'clientsInfos', uriTemplate: 'client/infos', controller: ClientInfosForListController::class),
         new GetCollection(),
         new Post(),
-        new Post(name: 'createClient', uriTemplate: 'client/add', controller: CreateClientController::class)
-        // , openapiContext: [
-        //     'requestBody' => [
-        //         'content' => [
-        //             'multipart/form-data' => [
-        //                 'schema' => [
-        //                     'type' => 'object',
-        //                     'properties' => [
-        //                         'file' => [
-        //                             'type' => 'string',
-        //                             'format' => 'binary'
-        //                         ]
-        //                     ]
-        //                 ]
-        //             ]
-        //         ]
-        //     ]
-        // ]),
-        ,
+        new Post(name: 'createClient', uriTemplate: 'client/add', controller: CreateClientController::class),
         new Patch()
     ]
 )]

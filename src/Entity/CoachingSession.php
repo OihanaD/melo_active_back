@@ -29,7 +29,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(),
         new Patch(),
         new Post(),
-        // new Post(name:'createSeance', uriTemplate: 'coaching-session/add', normalizationContext: ['groups' => 'coachingSession:add:read'], denormalizationContext: ['groups' => 'coachingSession:add:write'])
     ]
 )]
 class CoachingSession
